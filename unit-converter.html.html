@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corrected Land Converter</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f7ff; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .converter-card { background: #fff; padding: 25px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 100%; max-width: 420px; border: 1px solid #e1e8f0; }
+        h2 { text-align: center; color: #1a73e8; margin-bottom: 25px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 13px; font-weight: 600; color: #5f6368; margin-bottom: 6px; }
+        input { width: 100%; padding: 12px; border: 1.5px solid #dadce0; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        input:focus { outline: none; border-color: #1a73e8; background-color: #fff; }
+        .info-box { background-color: #f8f9fa; border-radius: 8px; padding: 12px; margin-top: 20px; font-size: 12px; color: #70757a; border-left: 4px solid #1a73e8; }
+    </style>
+</head>
+<body>
+
+<div class="converter-card">
+    <h2>Advanced Unit Converter</h2>
+
+    <div class="input-group">
+        <label>Hectare</label>
+        <input type="number" id="hectare" step="any" oninput="updateAll('hectare')">
+    </div>
+
+    <div class="input-group">
+        <label>Ayer (Are)</label>
+        <input type="number" id="ayer" step="any" oninput="updateAll('ayer')">
+    </div>
+
+    <div class="input-group">
+        <label>Bigha (Standard)</label>
+        <input type="number" id="bigha" step="any" oninput="updateAll('bigha')">
+    </div>
+
+    <div class="input-group">
+        <label>Biswa (20 per Bigha)</label>
+        <input type="number" id="biswa" step="any" oninput="updateAll('biswa')">
+    </div>
+
+    <div class="input-group">
+        <label>Sq. Gaj (Yards)</label>
+        <input type="number" id="gaj" step="any" oninput="updateAll('gaj')">
+    </div>
+
+    <div class="input-group">
+        <label>Sq. Meter</label>
+        <input type="number" id="sqmtr" step="any" oninput="updateAll('sqmtr')">
+    </div>
+
+    <div class="input-group">
+        <label>Sq. Feet</label>
+        <input type="number" id="sqft" step="any" oninput="updateAll('sqft')">
+    </div>
+
+    <div class="info-box">
+        <b>Logic:</b> 1 Bigha = 20 Biswa | 1 Bigha = 25.29 Ayer<br>
+        1 Biswa = 151.25 Sq.Gaj | 1 Sq.Gaj = 9 Sq.Ft
+    </div>
+</div>
+
+<script>
+function updateAll(source) {
+    let val = parseFloat(document.getElementById(source).value);
+    if (isNaN(val)) { clearAll(); return; }
+
+    let bigha;
+    // Sabse pehle input ko Bigha mein convert karte hain
+    switch(source) {
+        case 'bigha':   bigha = val; break;
+        case 'biswa':   bigha = val / 20; break;
+        case 'ayer':    bigha = val / 25.29; break;
+        case 'hectare': bigha = (val * 100) / 25.29; break;
+        case 'gaj':     bigha = (val / 151.25) / 20; break;
+        case 'sqft':    bigha = ((val / 9) / 151.25) / 20; break;
+        case 'sqmtr':   bigha = ((val * 1.196) / 151.25) / 20; break;
+    }
+
+    // Ab Bigha se baaki sab calculate karte hain
+    if (source !== 'bigha')   document.getElementById('bigha').value = bigha.toFixed(4);
+    if (source !== 'biswa')   document.getElementById('biswa').value = (bigha * 20).toFixed(2);
+    if (source !== 'ayer')    document.getElementById('ayer').value = (bigha * 25.29).toFixed(4);
+    if (source !== 'hectare') document.getElementById('hectare').value = ((bigha * 25.29) / 100).toFixed(6);
+    if (source !== 'gaj')     document.getElementById('gaj').value = (bigha * 20 * 151.25).toFixed(2);
+    if (source !== 'sqft')    document.getElementById('sqft').value = (bigha * 20 * 151.25 * 9).toFixed(2);
+    if (source !== 'sqmtr')   document.getElementById('sqmtr').value = ((bigha * 20 * 151.25) / 1.196).toFixed(2);
+}
+
+function clearAll() {
+    ['hectare', 'ayer', 'bigha', 'biswa', 'gaj', 'sqmtr', 'sqft'].forEach(id => {
+        document.getElementById(id).value = "";
+    });
+}
+</script>
+
+</body>
+</html>
